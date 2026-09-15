@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李明昊创作的无广告无聊小游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 注册界面 -->
+    <div id="register-screen" class="screen active">
+        <div class="container">
+            <h1>账号注册</h1>
+            
+            <div class="form-group">
+                <label>手机号码</label>
+                <input type="text" id="register-phone" placeholder="请输入手机号码">
+            </div>
+
+            <div class="form-group">
+                <label>家庭地址</label>
+                <input type="text" id="register-address" placeholder="请输入家庭地址">
+            </div>
+
+            <div class="form-group">
+                <label>账号名（10-100个不重复的中文字）</label>
+                <input type="text" id="register-username" placeholder="每个字只能使用一次">
+                <button type="button" class="btn-check" onclick="validateUsername()">确定</button>
+                <p class="hint" id="username-hint"></p>
+            </div>
+
+            <div class="form-group">
+                <label>密码（10字符，含大小写字母、数字、特殊字符）</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="register-password" placeholder="请输入密码" autocomplete="new-password">
+                    <button type="button" class="btn-eye" onclick="togglePasswordVisibility()">👁️</button>
+                </div>
+                <button type="button" class="btn-check" onclick="validatePassword()">确定</button>
+                <p class="hint" id="password-hint"></p>
+            </div>
+
+            <div class="form-group" id="confirm-password-1-group" style="display:none;">
+                <label>确认密码</label>
+                <input type="password" id="confirm-password-1" placeholder="请再次输入密码" autocomplete="new-password">
+                <button type="button" class="btn-check" onclick="confirmPassword1()">确定</button>
+                <p class="hint" id="confirm1-hint"></p>
+            </div>
+
+            <div class="form-group" id="confirm-password-2-group" style="display:none;">
+                <label>再次确认密码</label>
+                <p class="note">作者怕你们记不牢自己的密码所以再输最后一次，请谅解</p>
+                <input type="password" id="confirm-password-2" placeholder="请再次输入密码" autocomplete="new-password">
+                <button type="button" class="btn-check" onclick="confirmPassword2()">确定</button>
+                <p class="hint" id="confirm2-hint"></p>
+            </div>
+
+            <button id="register-submit-btn" class="btn-primary" style="display:none;" onclick="completeRegistration()">
+                注册完成
+            </button>
+        </div>
+    </div>
+
+    <!-- 登录界面 -->
+    <div id="login-screen" class="screen">
+        <div class="container">
+            <h1>账号登录</h1>
+            
+            <div class="form-group">
+                <label>账号名</label>
+                <input type="text" id="login-username" placeholder="请输入账号名" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="login-password" placeholder="请输入密码" autocomplete="new-password">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="remember-me">
+                    记住账号和密码
+                </label>
+            </div>
+
+            <button class="btn-primary" onclick="login()">登录</button>
+            <button class="btn-secondary" onclick="forgotPassword()">忘记密码</button>
+            
+            <div class="announcement-section">
+                <h3>进游戏必看公告</h3>
+                <button class="btn-secondary" onclick="showAnnouncement()">查看公告</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 公告弹窗 -->
+    <div id="announcement-modal" class="modal">
+        <div class="modal-content">
+            <h2>游戏公告</h2>
+            <div id="announcement-text" class="announcement-content">
+                <!-- 公告内容将由 JS 生成 -->
+            </div>
+            <button class="btn-primary" onclick="closeAnnouncement()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 自定义提示弹窗 -->
+    <div id="custom-alert-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2 id="custom-alert-title" style="margin-bottom: 30px;">提示</h2>
+            <p id="custom-alert-message" style="font-size: 20px; line-height: 1.8; margin: 30px 0; text-align: center;"></p>
+            <button class="btn-primary" onclick="closeCustomAlert()">确定</button>
+        </div>
+    </div>
+
+    <!-- 考核界面 -->
+    <div id="exam-screen" class="screen">
+        <div class="container">
+            <h1>人机验证考核</h1>
+            <p class="note">为验证你是否是人机，需完成考核才能进入游戏。考核内容为之前公告的内容，一个填空题，文字需一字不落。</p>
+            
+            <div class="logout-btn-container">
+                <button class="btn-logout" onclick="logout()">退出登录</button>
+            </div>
+
+            <div class="form-group">
+                <label id="question-1-label">问题1</label>
+                <input type="text" id="answer-1" placeholder="请输入答案">
+            </div>
+
+            <div class="form-group" id="question-2-group">
+                <label id="question-2-label">问题2</label>
+                <input type="text" id="answer-2" placeholder="请输入答案">
+            </div>
+
+            <button class="btn-primary" onclick="submitExam()">提交答案</button>
+            <p class="hint" id="exam-hint"></p>
+        </div>
+    </div>
+
+    <!-- 游戏主界面 -->
+    <div id="game-screen" class="screen">
+        <div class="container">
+            <h1>游戏关卡</h1>
+            
+            <div class="logout-btn-container">
+                <button class="btn-logout" onclick="logout()">退出登录</button>
+            </div>
+
+            <div id="level-list" class="level-list">
+                <!-- 关卡列表将由 JS 生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡界面 -->
+    <div id="level-screen" class="screen">
+        <div class="container">
+            <div class="logout-btn-container">
+                <button class="btn-logout" onclick="logout()">退出登录</button>
+            </div>
+            
+            <div id="level-content">
+                <!-- 关卡内容将由各关卡 JS 动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/validator.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
